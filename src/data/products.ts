@@ -33,7 +33,7 @@ export const demoProducts: ProductDemo[] = [
   {
     id: "earbuds-neo-air",
     platform: "Amazon",
-    title: "NeoAir Pulse Wireless Earbuds with ANC and 42H Case",
+    title: "Wireless Noise-Cancelling Earbuds",
     price: "$49.99",
     rating: 4.7,
     reviewCount: 2846,
@@ -54,7 +54,7 @@ export const demoProducts: ProductDemo[] = [
     imageLabel: "wireless earbuds",
     imageTone: "mint",
     demoNote:
-      "Winning demo sample: repeated five-star praise, grounded battery complaints, and an unsupported ANC claim.",
+      "Example report: repeated five-star praise, grounded battery complaints, and an unsupported ANC claim.",
     reviews: [
       {
         id: "e1",
@@ -179,7 +179,7 @@ export const demoProducts: ProductDemo[] = [
   {
     id: "charger-voltmax-100",
     platform: "Flipkart",
-    title: "VoltMax 100W USB-C Fast Charger with Braided Cable",
+    title: "100W USB-C Fast Charger with Braided Cable",
     price: "₹1,299",
     rating: 4.5,
     reviewCount: 1912,
@@ -200,7 +200,7 @@ export const demoProducts: ProductDemo[] = [
     imageLabel: "USB-C charger",
     imageTone: "cyan",
     demoNote:
-      "Marketplace-style fallback sample with product-review mismatch and grounded heating complaints.",
+      "Example report with product-review mismatch and grounded heating complaints.",
     reviews: [
       {
         id: "c1",
@@ -307,7 +307,7 @@ export const demoProducts: ProductDemo[] = [
   {
     id: "watch-vital-loop",
     platform: "Amazon",
-    title: "VitalLoop Smartwatch with Health Tracking and AMOLED Display",
+    title: "Fitness Smartwatch with AMOLED Display",
     price: "$79.00",
     rating: 4.3,
     reviewCount: 1238,
@@ -415,7 +415,7 @@ export const demoProducts: ProductDemo[] = [
   {
     id: "backpack-urbantrail",
     platform: "Flipkart",
-    title: "UrbanTrail 28L Laptop Backpack with Rain Cover",
+    title: "Anti-Theft College Backpack with Rain Cover",
     price: "₹1,899",
     rating: 4.4,
     reviewCount: 872,
@@ -519,7 +519,7 @@ export const demoProducts: ProductDemo[] = [
   {
     id: "skincare-lumiglow",
     platform: "Amazon",
-    title: "LumiGlow Vitamin C Brightening Serum for Daily Skincare",
+    title: "Vitamin C Brightening Face Serum",
     price: "$18.50",
     rating: 4.6,
     reviewCount: 3561,
@@ -639,7 +639,7 @@ const additionalProducts: ProductDemo[] = [
   {
     id: "phone-pixelnova-x1",
     platform: "Amazon",
-    title: "PixelNova X1 Smartphone with 108MP Camera and 5000mAh Battery",
+    title: "Smartphone with 108MP Camera and 5000mAh Battery",
     price: "$329.00",
     rating: 4.4,
     reviewCount: 4218,
@@ -659,7 +659,7 @@ const additionalProducts: ProductDemo[] = [
     ],
     imageLabel: "smartphone",
     imageTone: "cyan",
-    demoNote: "Phone sample includes repeated camera praise, grounded heating issues, and battery-claim friction.",
+    demoNote: "Example phone report includes repeated camera praise, grounded heating issues, and battery-claim friction.",
     reviews: [
       { id: "p1", reviewer: "Anmol R.", rating: 5, date: "2026-05-02", verified: false, title: "Best camera phone", body: "Best camera phone, amazing product, premium quality, highly recommended and value for money." },
       { id: "p2", reviewer: "Tessa M.", rating: 4, date: "2026-05-07", verified: true, title: "Good display, battery is average", body: "The 120Hz display is smooth and bright outdoors. Battery lasts from 8am to about 7pm with maps and video, not two full days." },
@@ -680,7 +680,7 @@ const additionalProducts: ProductDemo[] = [
   {
     id: "stand-flexrise-pro",
     platform: "Flipkart",
-    title: "FlexRise Pro Aluminum Laptop Stand for Desk Setup",
+    title: "Adjustable Aluminium Laptop Stand",
     price: "₹1,099",
     rating: 4.5,
     reviewCount: 1186,
@@ -700,7 +700,7 @@ const additionalProducts: ProductDemo[] = [
     ],
     imageLabel: "laptop stand",
     imageTone: "amber",
-    demoNote: "Laptop stand sample balances real ergonomic praise with grounded wobble and fit complaints.",
+    demoNote: "Example laptop stand report balances real ergonomic praise with grounded wobble and fit complaints.",
     reviews: [
       { id: "ls1", reviewer: "Devika N.", rating: 4, date: "2026-04-01", verified: true, title: "Good height for video calls", body: "My 14 inch MacBook sits at eye level now. The silicone pads hold it well, but typing directly on the laptop makes the stand wobble slightly." },
       { id: "ls2", reviewer: "Ramesh P.", rating: 5, date: "2026-04-02", verified: false, title: "Perfect item", body: "Perfect item, fast delivery, worth every penny, excellent quality and highly recommended." },
@@ -720,7 +720,7 @@ const additionalProducts: ProductDemo[] = [
   {
     id: "powerbank-chargecore-20k",
     platform: "Amazon",
-    title: "ChargeCore 20000mAh Power Bank with 22.5W USB-C Output",
+    title: "20,000mAh Fast-Charge Power Bank",
     price: "$32.99",
     rating: 4.6,
     reviewCount: 2744,
@@ -756,7 +756,7 @@ const additionalProducts: ProductDemo[] = [
   {
     id: "mouse-rapidstrike-rgb",
     platform: "Flipkart",
-    title: "RapidStrike RGB Gaming Mouse with 12K DPI Sensor",
+    title: "Lightweight RGB Gaming Mouse",
     price: "₹799",
     rating: 4.2,
     reviewCount: 1640,
@@ -792,7 +792,7 @@ const additionalProducts: ProductDemo[] = [
   {
     id: "lamp-lumidock-study",
     platform: "Amazon",
-    title: "LumiDock LED Study Lamp with Wireless Charger",
+    title: "Eye-Care LED Study Lamp",
     price: "$42.00",
     rating: 4.5,
     reviewCount: 934,
@@ -831,8 +831,8 @@ const publicLaunchProducts: ProductDemo[] = [
   {
     id: "shaker-fitseal",
     platform: "Other",
-    title: "Leak-Resistant Protein Shaker Bottle with Mixer Ball",
-    price: "Sample",
+    title: "Leak-Resistant Protein Shaker Bottle",
+    price: "$14.99",
     rating: 4.1,
     reviewCount: 12,
     category: "Protein Shaker Bottle",
@@ -847,8 +847,8 @@ const publicLaunchProducts: ProductDemo[] = [
   {
     id: "shoes-runstride",
     platform: "Myntra",
-    title: "RunStride Cushioned Everyday Running Shoes",
-    price: "Sample",
+    title: "Cushioned Everyday Running Shoes",
+    price: "$59.99",
     rating: 4.2,
     reviewCount: 12,
     category: "Shoes",
@@ -858,13 +858,13 @@ const publicLaunchProducts: ProductDemo[] = [
     imageLabel: "running shoes",
     imageTone: "violet",
     reviews: sampleReviews("rs", "running shoe", "the sole wore faster on one side", "daily 4km walks"),
-    qa: [{ question: "Is it good for marathon training?", answer: "It is a casual running shoe sample, not a specialist race shoe." }],
+    qa: [{ question: "Is it good for marathon training?", answer: "It is a casual running shoe example, not a specialist race shoe." }],
   },
   {
     id: "book-clearthinking",
     platform: "Other",
-    title: "Clear Thinking Paperback Productivity Book",
-    price: "Sample",
+    title: "Paperback Productivity Book",
+    price: "$16.99",
     rating: 4.0,
     reviewCount: 12,
     category: "Book",
@@ -879,8 +879,8 @@ const publicLaunchProducts: ProductDemo[] = [
   {
     id: "appliance-quickmix",
     platform: "Walmart",
-    title: "QuickMix Compact Kitchen Blender for Smoothies",
-    price: "Sample",
+    title: "Compact Kitchen Blender for Smoothies",
+    price: "$39.99",
     rating: 4.3,
     reviewCount: 12,
     category: "Kitchen Appliance",
@@ -896,12 +896,12 @@ const publicLaunchProducts: ProductDemo[] = [
 
 demoProducts.push(...additionalProducts, ...publicLaunchProducts);
 demoProducts.forEach((product) => {
-  product.analysisMode = "Sample analysis";
+  product.analysisMode = "Example report";
   product.demoNote =
-    product.demoNote?.replace(/Winning demo sample: /, "Sample analysis: ").replace(/Marketplace-style fallback sample/, "Sample analysis") ||
-    "Sample analysis template for public onboarding. It is not presented as live marketplace data.";
+    product.demoNote
+      ?.replace(/Winning demo sample: /, "Example report: ")
+      .replace(/Marketplace-style fallback sample/, "Example report") ||
+    "Example report for public onboarding. It is not presented as live marketplace data.";
   ensureSampleDepth(product);
   product.reviewCount = product.reviews.length;
 });
-
-export const winningDemoProduct = demoProducts[0];

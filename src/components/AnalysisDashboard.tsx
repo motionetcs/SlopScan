@@ -11,6 +11,7 @@ import {
   ListChecks,
   MessageSquareText,
   Radar,
+  RotateCcw,
   ShieldAlert,
   ShieldCheck,
   Sparkles,
@@ -186,7 +187,7 @@ function exportAnalysis(analysis: ProductAnalysis) {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = "ghostcart-trust-receipt.json";
+  link.download = "slopscan-trust-receipt.json";
   document.body.appendChild(link);
   link.click();
   link.remove();
@@ -241,7 +242,7 @@ function ReportSummary({
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="text-sm uppercase tracking-[0.2em] text-ghost-mint">Report summary</p>
-            <h3 className="font-display mt-2 text-2xl font-semibold text-white">Shareable GhostCart receipt</h3>
+            <h3 className="font-display mt-2 text-2xl font-semibold text-white">Shareable SlopScan receipt</h3>
             <p className="mt-2 text-sm leading-6 text-white/62">
               Clean judge-friendly summary generated from the current analysis.
             </p>
@@ -291,14 +292,16 @@ function ReportSummary({
 export function AnalysisDashboard({
   analysis,
   onBack,
+  onReset,
 }: {
   analysis: ProductAnalysis;
   onBack: () => void;
+  onReset?: () => void;
 }) {
   const [activeTab, setActiveTab] = useState<TabId>("receipt");
   const [showReport, setShowReport] = useState(false);
   const generatedAt = useMemo(() => new Date().toLocaleString(), [analysis.product.id]);
-  const analysisMode = analysis.product.analysisMode || (analysis.product.id.startsWith("manual-") ? "User-provided reviews" : "Sample analysis");
+  const analysisMode = analysis.product.analysisMode || (analysis.product.id.startsWith("manual-") ? "User-provided reviews" : "Example report");
   const splitData = useMemo(
     () =>
       Object.entries(analysis.categoryCounts).map(([name, value]) => ({
@@ -328,13 +331,25 @@ export function AnalysisDashboard({
     <section id="analysis" className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
       {showReport ? <ReportSummary analysis={analysis} onClose={() => setShowReport(false)} /> : null}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <button
-          type="button"
-          onClick={onBack}
-          className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white/75 transition hover:border-white/20 hover:bg-white/10"
-        >
-          Analyze another product
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={onBack}
+            className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white/75 transition hover:border-white/20 hover:bg-white/10"
+          >
+            Analyze another product
+          </button>
+          {onReset ? (
+            <button
+              type="button"
+              onClick={onReset}
+              className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white/75 transition hover:border-white/20 hover:bg-white/10"
+            >
+              <RotateCcw className="h-4 w-4" aria-hidden="true" />
+              Reset
+            </button>
+          ) : null}
+        </div>
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
@@ -390,7 +405,7 @@ export function AnalysisDashboard({
               This analysis flags suspicious patterns. It does not prove a review is fake.
             </div>
             <div className="mt-5 flex items-center justify-center">
-              <ScoreRing score={analysis.trustScore} label="trust score" caption="GhostCart" />
+              <ScoreRing score={analysis.trustScore} label="trust score" caption="SlopScan" />
             </div>
           </div>
         </div>
@@ -511,7 +526,7 @@ export function AnalysisDashboard({
                       <h3 className="text-xl font-semibold text-white">Real Buyer Issue Map</h3>
                     </div>
                     <p className="mt-2 max-w-2xl text-sm leading-6 text-white/62">
-                      Stop reading hundreds of reviews. GhostCart extracts repeated problems from reviews that look grounded in real product experience.
+                      Stop reading hundreds of reviews. SlopScan extracts repeated problems from reviews that look grounded in real product experience.
                     </p>
                   </div>
                   <Pill className="border-emerald-300/25 bg-emerald-300/10 text-emerald-100">

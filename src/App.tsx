@@ -15,16 +15,14 @@ import {
   ShieldCheck,
   ShieldQuestion,
   ShoppingBag,
-  Sparkles,
   Upload,
   Zap,
 } from "lucide-react";
 import { AnalysisDashboard } from "./components/AnalysisDashboard";
 import { Pill } from "./components/Badges";
 import { ProductCard } from "./components/ProductCard";
-import { ProductVisual } from "./components/ProductVisual";
 import { MarketplaceLogo } from "./components/MarketplaceLogo";
-import { demoProducts, winningDemoProduct } from "./data/products";
+import { demoProducts } from "./data/products";
 import { analyzeProduct } from "./lib/analysis";
 import { createManualProduct } from "./lib/manualImport";
 import { searchProductsCatalog, suggestedSearches } from "./lib/search";
@@ -34,15 +32,7 @@ import type { ManualImportInput, Platform, ProductDemo } from "./types";
 type EntryMode = "search" | "link" | "manual";
 
 const supportedPlatforms: Platform[] = ["Amazon", "Flipkart", "Meesho", "Myntra", "Walmart", "Best Buy", "Other"];
-
-const defaultManualText = `Rating: 5
-Amazing product, value for money, highly recommended.
-
-Rating: 2
-Used it for two weeks. The charging case became loose and the left side stopped charging.
-
-Rating: 4
-Works fine with my phone, but the mic is weak outdoors during calls.`;
+const categoryOptions = ["Electronics", "Beauty", "Fashion", "Books", "Home", "Kitchen", "Fitness", "Other"];
 
 const featureCards = [
   {
@@ -53,7 +43,7 @@ const featureCards = [
   {
     icon: ClipboardList,
     title: "Real Buyer Issue Map",
-    copy: "GhostCart extracts repeated buyer problems from reviews that look grounded in real experience.",
+    copy: "SlopScan extracts repeated buyer problems from reviews that look grounded in real experience.",
   },
   {
     icon: Zap,
@@ -69,12 +59,12 @@ const featureCards = [
 
 const faqs = [
   {
-    q: "Does GhostCart guarantee a review is fake?",
-    a: "No. GhostCart flags suspicious patterns and explains the evidence. It does not make absolute accusations.",
+    q: "Does SlopScan guarantee a review is fake?",
+    a: "No. SlopScan flags suspicious patterns and explains the evidence. It does not make absolute accusations.",
   },
   {
     q: "Can it fetch Amazon or Flipkart reviews directly?",
-    a: "GhostCart does not rely on fragile or restricted scraping. It detects the marketplace from a URL, then asks you to paste or import review text for a reliable analysis.",
+    a: "SlopScan does not rely on fragile or restricted scraping. It detects the marketplace from a URL, then asks you to paste or import review text for a reliable analysis.",
   },
   {
     q: "Why do I need to paste reviews?",
@@ -94,7 +84,7 @@ const faqs = [
   },
   {
     q: "What makes it different from a review summarizer?",
-    a: "A summarizer compresses reviews. GhostCart evaluates trust signals, suspicious clusters, review mismatch, unsupported claims, and grounded buyer issues.",
+    a: "A summarizer compresses reviews. SlopScan evaluates trust signals, suspicious clusters, review mismatch, unsupported claims, and grounded buyer issues.",
   },
   {
     q: "Can sellers use this?",
@@ -110,12 +100,12 @@ const faqs = [
   },
   {
     q: "What are the limitations?",
-    a: "GhostCart surfaces evidence from pasted or sample reviews. It does not access private marketplace systems, prove intent, or replace human judgment.",
+    a: "SlopScan surfaces evidence from pasted or example reviews. It does not access private marketplace systems, prove intent, or replace human judgment.",
   },
 ];
 
 function App() {
-  const [entryMode, setEntryMode] = useState<EntryMode>("search");
+  const [entryMode, setEntryMode] = useState<EntryMode>("link");
   const [query, setQuery] = useState("");
   const [platforms, setPlatforms] = useState<Platform[]>(supportedPlatforms);
   const [hasSearched, setHasSearched] = useState(false);
@@ -127,17 +117,16 @@ function App() {
   const [manualError, setManualError] = useState("");
   const [manualNotice, setManualNotice] = useState("");
   const [manualInput, setManualInput] = useState<ManualImportInput>({
-    title: "Imported wireless earbuds",
-    category: "Wireless Earbuds",
+    title: "",
+    category: "Electronics",
     platform: "Other",
     averageRating: "",
-    sellerClaims: "Long battery life, noise cancelling calls, fast USB-C charging",
-    reviewsText: defaultManualText,
+    sellerClaims: "",
+    reviewsText: "",
   });
 
   const analysis = useMemo(() => (selectedProduct ? analyzeProduct(selectedProduct) : null), [selectedProduct]);
   const results = useMemo(() => searchProductsCatalog(demoProducts, query, platforms), [query, platforms]);
-  const previewAnalysis = useMemo(() => analyzeProduct(winningDemoProduct), []);
 
   useEffect(() => {
     if (selectedProduct) {
@@ -156,7 +145,7 @@ function App() {
   function handleSearch(event?: FormEvent) {
     event?.preventDefault();
     if (!query.trim()) {
-      setSearchError("Type a product name, paste a link, or choose a sample category to start the scan.");
+      setSearchError("Type a category or choose an example report to explore.");
       setSelectedProduct(null);
       return;
     }
@@ -164,7 +153,7 @@ function App() {
     setEntryMode("search");
     setHasSearched(true);
     setSelectedProduct(null);
-    window.setTimeout(() => document.getElementById("results")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+    window.setTimeout(() => document.getElementById("examples")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
   }
 
   function quickSearch(nextQuery: string) {
@@ -173,7 +162,7 @@ function App() {
     setEntryMode("search");
     setHasSearched(true);
     setSelectedProduct(null);
-    window.setTimeout(() => document.getElementById("results")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+    window.setTimeout(() => document.getElementById("examples")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
   }
 
   function handleUrlScan(event: FormEvent) {
@@ -182,7 +171,7 @@ function App() {
     setUrlNotice("");
     const platform = platformFromUrl(urlValue);
     if (!platform) {
-      setUrlError("Paste a valid http or https product URL. GhostCart will never crash or attempt fragile marketplace scraping.");
+      setUrlError("Paste a valid http or https product URL. SlopScan will never crash or attempt fragile marketplace scraping.");
       setSelectedProduct(null);
       return;
     }
@@ -193,7 +182,7 @@ function App() {
       platform,
     }));
     setUrlNotice(
-      `Detected ${platform}. GhostCart cannot directly fetch reviews from this marketplace in your current environment. Paste reviews below and we will analyze the review-risk signals.`,
+      `Detected ${platform}. SlopScan cannot directly fetch reviews from this marketplace in your current environment. Paste reviews below and we will analyze the review-risk signals.`,
     );
     setManualNotice(`Detected ${platform} URL. Paste or import the reviews you want analyzed; no restricted scraping will be attempted.`);
     setEntryMode("manual");
@@ -206,7 +195,7 @@ function App() {
     event.preventDefault();
     setManualError("");
     if (manualInput.reviewsText.trim().length < 20) {
-      setManualError("Paste at least one review with enough text to analyze.");
+      setManualError("Paste review text first. Add one review per line or separate reviews with blank lines.");
       return;
     }
     setHasSearched(false);
@@ -236,7 +225,7 @@ function App() {
     setManualError("");
     setManualNotice("");
     setHasSearched(false);
-    setEntryMode("search");
+    setEntryMode("link");
     window.setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 50);
   }
 
@@ -244,11 +233,12 @@ function App() {
     setManualInput((current) => ({
       ...current,
       title: "",
-      category: "",
+      category: "Electronics",
       averageRating: "",
       sellerClaims: "",
       reviewsText: "",
     }));
+    setUrlValue("");
     setManualNotice("Input cleared. Paste reviews or import a text/CSV file to begin.");
     setManualError("");
   }
@@ -260,6 +250,19 @@ function App() {
   function openManualAnalyzer() {
     setEntryMode("manual");
     setSelectedProduct(null);
+    window.setTimeout(() => scrollToId("scan-panel"), 50);
+  }
+
+  function openUrlAnalyzer() {
+    setEntryMode("link");
+    setSelectedProduct(null);
+    window.setTimeout(() => scrollToId("scan-panel"), 50);
+  }
+
+  function openImportAnalyzer() {
+    setEntryMode("manual");
+    setSelectedProduct(null);
+    setManualNotice("Import a text or CSV file, or paste bulk review text below.");
     window.setTimeout(() => scrollToId("scan-panel"), 50);
   }
 
@@ -276,16 +279,16 @@ function App() {
               <ShoppingBag className="h-5 w-5" aria-hidden="true" />
             </span>
             <span>
-              <span className="block text-base font-semibold text-white">GhostCart</span>
+              <span className="block text-base font-semibold text-white">SlopScan</span>
               <span className="block text-xs text-white/48">Review X-Ray</span>
             </span>
           </button>
           <div className="hidden items-center gap-2 md:flex">
-            <button type="button" onClick={() => scrollToId("results")} className="rounded-lg px-3 py-2 text-sm text-white/58 transition hover:bg-white/5 hover:text-white">
-              Products
+            <button type="button" onClick={() => scrollToId("scan-panel")} className="rounded-lg px-3 py-2 text-sm text-white/58 transition hover:bg-white/5 hover:text-white">
+              Analyzer
             </button>
-            <button type="button" onClick={openManualAnalyzer} className="rounded-lg px-3 py-2 text-sm text-white/58 transition hover:bg-white/5 hover:text-white">
-              Manual Analyzer
+            <button type="button" onClick={() => scrollToId("examples")} className="rounded-lg px-3 py-2 text-sm text-white/58 transition hover:bg-white/5 hover:text-white">
+              Examples
             </button>
             <a href="#methodology" className="rounded-lg px-3 py-2 text-sm text-white/58 transition hover:bg-white/5 hover:text-white">
               Methodology
@@ -302,17 +305,17 @@ function App() {
           <div className="mx-auto flex max-w-7xl gap-2 overflow-x-auto no-scrollbar">
             <button
               type="button"
-              onClick={() => scrollToId("results")}
+              onClick={() => scrollToId("scan-panel")}
               className="shrink-0 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-white/70"
             >
-              Products
+              Analyzer
             </button>
             <button
               type="button"
-              onClick={openManualAnalyzer}
+              onClick={() => scrollToId("examples")}
               className="shrink-0 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-white/70"
             >
-              Manual Analyzer
+              Examples
             </button>
             <a href="#methodology" className="shrink-0 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-medium text-white/70">
               Methodology
@@ -334,13 +337,13 @@ function App() {
             <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }}>
               <div className="mb-5 flex flex-wrap gap-2">
                 <Pill className="border-ghost-mint/25 bg-ghost-mint/10 text-ghost-mint">Marketplace trust layer</Pill>
-                <Pill className="border-white/10 bg-white/5 text-white/64">URL, paste, and import analysis</Pill>
+                <Pill className="border-white/10 bg-white/5 text-white/64">Paste URL, import reviews, get a report</Pill>
               </div>
-              <h1 className="font-display max-w-3xl text-5xl font-semibold leading-[1.02] text-white md:text-6xl">
+              <h1 className="font-display max-w-3xl text-4xl font-semibold leading-[1.05] text-white sm:text-5xl md:text-6xl">
                 See the review patterns behind the rating.
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-white/68">
-                GhostCart helps shoppers spot repetitive, generic, promotional, and low-trust review signals before they buy.
+                SlopScan helps you analyze product reviews for repetition, generic praise, promotional wording, thin detail, and other low-trust signals before you buy.
               </p>
               <p className="mt-4 max-w-xl text-sm leading-6 text-white/48">
                 A trust layer for online shopping. It flags suspicious patterns; it does not prove a review is fake.
@@ -349,40 +352,32 @@ function App() {
               <div className="mt-8 grid gap-4 sm:flex">
                 <button
                   type="button"
-                  onClick={handleSearch}
+                  onClick={openManualAnalyzer}
                   className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-semibold text-ink transition hover:bg-ghost-mint"
                 >
-                  <Search className="h-4 w-4" aria-hidden="true" />
-                  Analyze a product
+                  <Upload className="h-4 w-4" aria-hidden="true" />
+                  Analyze Reviews
                 </button>
                 <button
                   type="button"
-                  onClick={openManualAnalyzer}
+                  onClick={openUrlAnalyzer}
                   className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border border-ghost-cyan/30 bg-ghost-cyan/10 px-5 py-3 text-sm font-semibold text-cyan-50 transition hover:bg-ghost-cyan/18"
                 >
-                  <Upload className="h-4 w-4" aria-hidden="true" />
-                  Paste reviews
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSelectedProduct(winningDemoProduct)}
-                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-white/80 transition hover:bg-white/10 hover:text-white"
-                >
-                  <Sparkles className="h-4 w-4" aria-hidden="true" />
-                  Try sample analysis
+                  <LinkIcon className="h-4 w-4" aria-hidden="true" />
+                  Paste Product URL
                 </button>
                 <button
                   type="button"
                   onClick={() => scrollToId("methodology")}
                   className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border border-white/10 bg-black/15 px-5 py-3 text-sm font-semibold text-white/72 transition hover:bg-white/10 hover:text-white"
                 >
-                  View Methodology
+                  How scoring works
                 </button>
               </div>
               <div className="mt-7 grid max-w-xl grid-cols-3 gap-3">
                 {[
-                  [`${demoProducts.length}`, "sample analyses"],
-                  ["100+", "review signals"],
+                  ["No", "account needed"],
+                  ["Text/CSV", "review import"],
                   ["0", "fragile scraping"],
                 ].map(([value, label]) => (
                   <div key={label} className="rounded-lg border border-white/10 bg-white/[0.045] p-3">
@@ -402,9 +397,9 @@ function App() {
             >
               <div className="mb-4 grid grid-cols-3 gap-2">
                 {[
-                  { id: "search", label: "Search", icon: Search },
-                  { id: "link", label: "Link", icon: LinkIcon },
-                  { id: "manual", label: "Manual", icon: Upload },
+                  { id: "link", label: "Product URL", icon: LinkIcon },
+                  { id: "manual", label: "Review Text", icon: Upload },
+                  { id: "search", label: "Examples", icon: Search },
                 ].map((mode) => {
                   const Icon = mode.icon;
                   const active = entryMode === mode.id;
@@ -427,7 +422,7 @@ function App() {
               {entryMode === "search" ? (
                 <form onSubmit={handleSearch} className="grid gap-4">
                   <label className="grid gap-2">
-                    <span className="text-sm font-medium text-white/74">Marketplace product search</span>
+                    <span className="text-sm font-medium text-white/74">Find example reports</span>
                     <div className="flex min-h-14 items-center gap-3 rounded-lg border border-white/10 bg-black/20 px-4 focus-within:border-ghost-mint/55">
                       <Search className="h-5 w-5 text-white/36" aria-hidden="true" />
                       <input
@@ -477,7 +472,7 @@ function App() {
                     type="submit"
                     className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-ghost-mint px-5 py-3 text-sm font-semibold text-ink transition hover:bg-white"
                   >
-                    Show matched products
+                    Show example reports
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </button>
                 </form>
@@ -486,7 +481,7 @@ function App() {
               {entryMode === "link" ? (
                 <form onSubmit={handleUrlScan} className="grid gap-4">
                   <label className="grid gap-2">
-                    <span className="text-sm font-medium text-white/74">Product link</span>
+                    <span className="text-sm font-medium text-white/74">Product URL</span>
                     <div className="flex min-h-14 items-center gap-3 rounded-lg border border-white/10 bg-black/20 px-4 focus-within:border-ghost-cyan/55">
                       <LinkIcon className="h-5 w-5 text-white/36" aria-hidden="true" />
                       <input
@@ -532,9 +527,21 @@ function App() {
                       {manualNotice}
                     </div>
                   ) : null}
+                  <label className="grid gap-2">
+                    <span className="text-sm font-medium text-white/74">Product URL optional</span>
+                    <div className="flex min-h-11 items-center gap-3 rounded-lg border border-white/10 bg-black/20 px-4 focus-within:border-ghost-cyan/55">
+                      <LinkIcon className="h-4 w-4 text-white/36" aria-hidden="true" />
+                      <input
+                        value={urlValue}
+                        onChange={(event) => setUrlValue(event.target.value)}
+                        placeholder="Paste the product link if you have it"
+                        className="w-full bg-transparent py-2 text-white outline-none placeholder:text-white/30"
+                      />
+                    </div>
+                  </label>
                   <div className="grid gap-3 sm:grid-cols-[1fr_12rem]">
                     <label className="grid gap-2">
-                      <span className="text-sm font-medium text-white/74">Product title</span>
+                      <span className="text-sm font-medium text-white/74">Product name optional</span>
                       <input
                         value={manualInput.title}
                         onChange={(event) => setManualInput((current) => ({ ...current, title: event.target.value }))}
@@ -557,12 +564,15 @@ function App() {
                   <div className="grid gap-3 sm:grid-cols-[1fr_10rem]">
                     <label className="grid gap-2">
                       <span className="text-sm font-medium text-white/74">Product category</span>
-                      <input
+                      <select
                         value={manualInput.category}
                         onChange={(event) => setManualInput((current) => ({ ...current, category: event.target.value }))}
-                        placeholder="Wireless earbuds, shoes, book, kitchen appliance"
-                        className="min-h-11 rounded-lg border border-white/10 bg-black/20 px-4 py-2 text-white outline-none placeholder:text-white/30 focus:border-ghost-mint/55"
-                      />
+                        className="min-h-11 rounded-lg border border-white/10 bg-black/20 px-4 py-2 text-white outline-none focus:border-ghost-mint/55"
+                      >
+                        {categoryOptions.map((category) => (
+                          <option key={category}>{category}</option>
+                        ))}
+                      </select>
                     </label>
                     <label className="grid gap-2">
                       <span className="text-sm font-medium text-white/74">Avg. rating</span>
@@ -585,19 +595,19 @@ function App() {
                     />
                   </label>
                   <label className="grid gap-2">
-                    <span className="text-sm font-medium text-white/74">Pasted reviews</span>
+                    <span className="text-sm font-medium text-white/74">Review text</span>
                     <textarea
                       value={manualInput.reviewsText}
                       onChange={(event) => setManualInput((current) => ({ ...current, reviewsText: event.target.value }))}
                       rows={7}
-                      placeholder="Paste multiple reviews. Separate reviews with blank lines, CSV rows, or --- dividers."
+                      placeholder="Paste one review per line, or separate reviews with blank lines."
                       className="rounded-lg border border-white/10 bg-black/20 px-4 py-3 text-white outline-none focus:border-ghost-mint/55"
                     />
                   </label>
                   <div className="flex flex-wrap items-center gap-3">
                     <label className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10">
                       <FileUp className="h-4 w-4" aria-hidden="true" />
-                      Import text/CSV
+                      Import Reviews
                       <input type="file" accept=".txt,.csv,text/plain,text/csv" onChange={handleReviewFile} className="sr-only" />
                     </label>
                     <button
@@ -625,33 +635,118 @@ function App() {
           </div>
         </section>
 
-        {analysis ? <AnalysisDashboard analysis={analysis} onBack={() => setSelectedProduct(null)} /> : null}
+        {analysis ? <AnalysisDashboard analysis={analysis} onBack={() => setSelectedProduct(null)} onReset={resetAnalysis} /> : null}
 
-        <section id="results" className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+        <section id="real-flow" className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+          <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="text-sm uppercase tracking-[0.2em] text-ghost-mint">Sample analyses</p>
-              <h2 className="font-display mt-2 text-3xl font-semibold text-white">
-                {hasSearched ? `Matched sample analyses for "${query || "all products"}"` : "Public sample analyses"}
-              </h2>
-              <p className="mt-2 text-sm text-white/50">
-                Smart fuzzy search catches typos like "easrbnuds" and shows clearly labeled sample analysis templates.
+              <p className="text-sm uppercase tracking-[0.2em] text-ghost-mint">Review analyzer</p>
+              <h2 className="font-display mt-2 text-3xl font-semibold text-white">Analyze reviews from any product page</h2>
+              <p className="mt-3 max-w-3xl text-sm leading-6 text-white/60">
+                Paste a product link, import reviews, or drop raw review text. SlopScan checks the language patterns behind the rating and gives you an explainable trust breakdown.
               </p>
             </div>
             <button
               type="button"
-              onClick={() => setSelectedProduct(winningDemoProduct)}
-              className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
+              onClick={openManualAnalyzer}
+              className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-ink transition hover:bg-ghost-mint"
             >
-              <Sparkles className="h-4 w-4" aria-hidden="true" />
-              Try Sample Analysis
+              <Upload className="h-4 w-4" aria-hidden="true" />
+              Analyze Real Reviews
             </button>
           </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {[
+              {
+                icon: LinkIcon,
+                title: "Paste a product URL",
+                copy: "Add a marketplace link so SlopScan can detect the source and guide you through review analysis.",
+                action: "Analyze URL",
+                onClick: openUrlAnalyzer,
+              },
+              {
+                icon: FileText,
+                title: "Paste review text",
+                copy: "Copy reviews from any product page and get a trust/risk breakdown in seconds.",
+                action: "Paste Reviews",
+                onClick: openManualAnalyzer,
+              },
+              {
+                icon: FileUp,
+                title: "Import reviews",
+                copy: "Paste bulk text or upload a CSV/text file when available.",
+                action: "Import Reviews",
+                onClick: openImportAnalyzer,
+              },
+            ].map((card) => {
+              const Icon = card.icon;
+              return (
+                <article key={card.title} className="rounded-lg border border-white/10 bg-white/[0.045] p-5">
+                  <div className="mb-4 grid h-11 w-11 place-items-center rounded-lg border border-ghost-mint/25 bg-ghost-mint/10 text-ghost-mint">
+                    <Icon className="h-5 w-5" aria-hidden="true" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-white">{card.title}</h3>
+                  <p className="mt-3 min-h-16 text-sm leading-6 text-white/62">{card.copy}</p>
+                  <button
+                    type="button"
+                    onClick={card.onClick}
+                    className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white hover:text-ink"
+                  >
+                    {card.action}
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </button>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+
+        <section id="examples" className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="text-sm uppercase tracking-[0.2em] text-ghost-cyan">Examples</p>
+              <h2 className="font-display mt-2 text-3xl font-semibold text-white">
+                {hasSearched ? `Matched example reports for "${query || "all products"}"` : "Explore example reports"}
+              </h2>
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-white/56">
+                These examples show how SlopScan explains review-risk signals. They are illustrative reports, not live marketplace listings.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={openManualAnalyzer}
+              className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
+            >
+              <Upload className="h-4 w-4" aria-hidden="true" />
+              Paste Reviews
+            </button>
+          </div>
+          <form onSubmit={handleSearch} className="mb-5 grid gap-3 rounded-lg border border-white/10 bg-white/[0.035] p-4 md:grid-cols-[1fr_auto]">
+            <label className="flex min-h-11 items-center gap-3 rounded-lg border border-white/10 bg-black/18 px-4 focus-within:border-ghost-cyan/45">
+              <Search className="h-4 w-4 text-white/40" aria-hidden="true" />
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search examples: earbuds, shoes, blender, skincare"
+                className="w-full bg-transparent py-2 text-sm text-white outline-none placeholder:text-white/32"
+              />
+            </label>
+            <button
+              type="submit"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-ink transition hover:bg-ghost-mint"
+            >
+              Search Examples
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </form>
+          {searchError ? (
+            <div className="mb-5 rounded-lg border border-amber-300/25 bg-amber-300/10 p-4 text-sm text-amber-50">{searchError}</div>
+          ) : null}
           {hasSearched && results.length === 0 ? (
             <div className="mb-6 rounded-lg border border-amber-300/25 bg-amber-300/10 p-5">
-              <h3 className="font-display text-lg font-semibold text-amber-50">No matching sample analysis found</h3>
+              <h3 className="font-display text-lg font-semibold text-amber-50">No matching example report found</h3>
               <p className="mt-2 text-sm leading-6 text-amber-50/80">
-                Try another category or switch to manual review analysis for your exact product.
+                Try another category or paste real reviews for your exact product.
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
                 {suggestedSearches.map((item) => (
@@ -669,13 +764,13 @@ function App() {
                   onClick={openManualAnalyzer}
                   className="rounded-full border border-white/10 bg-white/10 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-white/15"
                 >
-                  Paste reviews manually
+                  Analyze real reviews
                 </button>
               </div>
             </div>
           ) : null}
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {(hasSearched ? results : demoProducts).map((product) => (
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {(hasSearched ? results : demoProducts.slice(0, 8)).map((product) => (
               <ProductCard key={product.id} product={product} onAnalyze={setSelectedProduct} />
             ))}
           </div>
@@ -704,13 +799,13 @@ function App() {
               <p className="text-sm uppercase tracking-[0.2em] text-ghost-mint">How it works</p>
               <h2 className="mt-3 text-3xl font-semibold text-white">Paste reviews, get a second opinion before buying.</h2>
               <p className="mt-4 text-base leading-7 text-white/64">
-                GhostCart checks whether reviews are specific, varied, balanced, and useful. Repeated praise, thin detail,
+                SlopScan checks whether reviews are specific, varied, balanced, and useful. Repeated praise, thin detail,
                 and promotional wording reduce confidence.
               </p>
             </div>
             <div className="grid gap-4 md:grid-cols-3">
               {[
-                ["1", "Detect source", "Paste a product URL or choose a sample category. GhostCart identifies the source without fragile scraping."],
+                ["1", "Detect source", "Paste a product URL or choose an example category. SlopScan identifies the source without fragile scraping."],
                 ["2", "Import reviews", "Paste bulk review text or import a text/CSV file from your own export or copied review list."],
                 ["3", "Read the receipt", "Review trust score, risk signals, repeated wording, buyer issues, and a copyable report."],
               ].map(([step, title, copy]) => (
@@ -744,7 +839,7 @@ function App() {
             <p className="text-sm uppercase tracking-[0.2em] text-ghost-cyan">Why it matters</p>
             <h2 className="mt-3 text-3xl font-semibold text-white">Fake-looking review noise wastes buyer time.</h2>
             <p className="mt-4 text-base leading-7 text-white/64">
-              Star ratings compress too much. GhostCart asks whether reviews look grounded in real product experience,
+              Star ratings compress too much. SlopScan asks whether reviews look grounded in real product experience,
               then separates buyer evidence from generic praise, repeated clusters, ghost reviews, and unsupported seller claims.
             </p>
           </div>
@@ -753,44 +848,13 @@ function App() {
               ["Marketplace trust", "Flags fake-looking reviews, paid-style patterns, and low-evidence praise."],
               ["Content slop", "Catches generic Q&A answers and review text that does not answer real buyer questions."],
               ["Consumer protection", "Surfaces long-term defects, mismatch, safety risk, and return friction."],
-              ["Reliable public flow", "Works with pasted reviews, text/CSV imports, sample analyses, and validated product links without hidden APIs."],
+              ["Reliable public flow", "Works with pasted reviews, text/CSV imports, example reports, and validated product links without hidden APIs."],
             ].map(([title, copy]) => (
               <div key={title} className="rounded-lg border border-white/10 bg-white/[0.045] p-4">
                 <h3 className="font-semibold text-white">{title}</h3>
                 <p className="mt-2 text-sm leading-6 text-white/60">{copy}</p>
               </div>
             ))}
-          </div>
-        </section>
-
-        <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-          <div className="glass grid gap-8 rounded-lg p-5 md:grid-cols-[0.9fr_1.1fr] md:p-8">
-            <div>
-              <p className="text-sm uppercase tracking-[0.2em] text-ghost-amber">Sample preview</p>
-              <h2 className="mt-3 text-3xl font-semibold text-white">The result is an explainable Trust Receipt.</h2>
-              <p className="mt-4 text-sm leading-6 text-white/62">
-                Open a sample analysis to see repeated five-star praise, grounded battery complaints, a weak ANC claim,
-                and a buyer issue map that separates useful evidence from review noise.
-              </p>
-            </div>
-            <div className="grid gap-4 md:grid-cols-[13rem_1fr]">
-              <ProductVisual product={winningDemoProduct} compact />
-              <div className="grid gap-3">
-                <div className="rounded-lg border border-white/10 bg-black/18 p-4">
-                  <p className="text-sm text-white/50">Preview score</p>
-                  <p className="mt-1 text-3xl font-semibold text-ghost-amber">{previewAnalysis.trustScore}/100</p>
-                  <p className="mt-2 text-sm leading-6 text-white/62">{previewAnalysis.summary}</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setSelectedProduct(winningDemoProduct)}
-                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-ink transition hover:bg-ghost-mint"
-                >
-                  Open Trust Receipt
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </button>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -825,7 +889,7 @@ function App() {
             <div className="grid gap-4 md:grid-cols-2">
               {[
                 ["Local pattern analysis", "Review text is analyzed for pattern detection in the app flow. Basic use does not require an account."],
-                ["No restricted scraping", "Marketplace URLs are validated and categorized, but GhostCart does not pretend to fetch reviews where reliable access is unavailable."],
+                ["No restricted scraping", "Marketplace URLs are validated and categorized, but SlopScan does not pretend to fetch reviews where reliable access is unavailable."],
                 ["Paste carefully", "Do not paste private information, order IDs, phone numbers, addresses, or personal data into review text."],
                 ["No exposed secrets", "The app uses deterministic local logic and no required paid API keys for the core analysis."],
               ].map(([title, copy]) => (
@@ -866,7 +930,7 @@ function App() {
       <footer className="border-t border-white/10 px-4 py-8 text-center text-sm text-white/45 sm:px-6 lg:px-8">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-3">
           <FileText className="h-4 w-4" aria-hidden="true" />
-          GhostCart flags review-risk patterns. It is not legal proof of fake reviews or a replacement for human judgment.
+          SlopScan flags review-risk patterns. It is not legal proof of fake reviews or a replacement for human judgment.
         </div>
       </footer>
     </div>

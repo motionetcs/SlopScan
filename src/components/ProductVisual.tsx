@@ -192,9 +192,6 @@ export function ProductVisual({ product, compact = false }: { product: ProductDe
           <p className="text-lg font-semibold text-white">{product.rating}</p>
         </div>
       </div>
-      <div className="absolute left-5 top-5 rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs text-white/70">
-        Trust scan source
-      </div>
     </div>
   );
 }

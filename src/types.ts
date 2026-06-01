@@ -10,7 +10,7 @@ export type FinalVerdict =
   | "High review-risk"
   | "Not enough review data";
 
-export type AnalysisMode = "Sample analysis" | "User-provided reviews" | "Imported reviews";
+export type AnalysisMode = "Example report" | "User-provided reviews" | "Imported reviews";
 
 export interface Review {
   id: string;

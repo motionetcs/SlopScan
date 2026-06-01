@@ -11,11 +11,11 @@ export function buildReportSummary(analysis: ProductAnalysis) {
   );
 
   return [
-    `GhostCart Trust Receipt`,
+    `SlopScan Trust Receipt`,
     `Product: ${analysis.product.title}`,
     `Category: ${analysis.product.category}`,
     `Platform: ${analysis.product.platform}`,
-    `Analysis type: ${analysis.product.analysisMode || (analysis.product.id.startsWith("manual-") ? "User-provided reviews" : "Sample analysis")}`,
+    `Analysis type: ${analysis.product.analysisMode || (analysis.product.id.startsWith("manual-") ? "User-provided reviews" : "Example report")}`,
     `Reviews analyzed: ${analysis.reviews.length}`,
     `Verdict: ${analysis.finalVerdict}`,
     `Trust score: ${analysis.trustScore}/100`,
@@ -26,6 +26,6 @@ export function buildReportSummary(analysis: ProductAnalysis) {
     `Main buyer issues: ${topIssues || "No repeated grounded buyer issue emerged from this review set."}`,
     `Unsupported/contradicted claims: ${unsupportedClaims.length}`,
     `Summary: ${analysis.summary}`,
-    `Note: GhostCart flags suspicious patterns and does not prove that a review is fake.`,
+    `Note: SlopScan flags suspicious patterns and does not prove that a review is fake.`,
   ].join("\n");
 }

@@ -2,7 +2,6 @@ import type { ManualImportInput, ProductDemo, Review } from "../types";
 
 function inferCategory(title: string, category?: string) {
   const explicit = category?.trim();
-  if (explicit) return explicit;
   const value = title.toLowerCase();
   if (value.includes("earbud") || value.includes("headphone")) return "Wireless Earbuds";
   if (value.includes("charger") || value.includes("usb")) return "USB-C Fast Charger";
@@ -17,6 +16,7 @@ function inferCategory(title: string, category?: string) {
   if (value.includes("watch")) return "Smartwatch";
   if (value.includes("backpack") || value.includes("bag")) return "Backpack";
   if (value.includes("skin") || value.includes("serum")) return "Skincare Serum";
+  if (explicit) return explicit;
   return "Marketplace Product";
 }
 
@@ -101,7 +101,7 @@ export function createManualProduct(input: ManualImportInput): ProductDemo {
     tags: inferTags(safeTitle, input.sellerClaims),
     sellerClaims: sellerClaims.length ? sellerClaims : ["Manual import did not include seller claims"],
     bullets: ["Reviews were pasted manually and analyzed locally in the browser."],
-    imageLabel: "manual import",
+    imageLabel: safeTitle,
     imageTone: "mint",
     analysisMode: "User-provided reviews",
     reviews,
