@@ -4,7 +4,7 @@ Use this for a hackathon pitch deck or 3-4 minute demo video.
 
 Recommended slide style:
 - Use picture on the left and short text on the right.
-- Use screenshots from http://localhost:5174/
+- Use screenshots from https://motionetcs.github.io/SlopScan/
 - Keep each slide to 3-5 bullets.
 - Use the speaker notes as your video voiceover.
 
@@ -204,4 +204,3 @@ SCREENSHOT CHECKLIST
 SHORT PITCH
 
 SlopScan is a review trust layer for online shopping. Users paste a product URL, paste or import reviews, and get an explainable trust dashboard. It flags suspicious review patterns, repeated phrases, generic praise, product mismatch, unsupported seller claims, and grounded buyer issues. It helps shoppers understand the review quality behind a rating before they buy.
-

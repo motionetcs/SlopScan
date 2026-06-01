@@ -11,6 +11,12 @@ Recommended slide style:
 Preview URL for screenshots:
 
 ```text
+https://motionetcs.github.io/SlopScan/
+```
+
+Local preview URL:
+
+```text
 http://localhost:5174/
 ```
 
@@ -289,4 +295,3 @@ Capture these screenshots for PPT:
 ## Short Pitch
 
 SlopScan is a review trust layer for online shopping. Users paste a product URL, paste or import reviews, and get an explainable trust dashboard. It flags suspicious review patterns, repeated phrases, generic praise, product mismatch, unsupported seller claims, and grounded buyer issues. It helps shoppers understand the review quality behind a rating before they buy.
-

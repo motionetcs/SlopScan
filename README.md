@@ -2,6 +2,22 @@
 
 SlopScan is a review trust analyzer for online shopping. It helps shoppers inspect the quality of product reviews before trusting a rating.
 
+## Real Product Name
+
+The official product name is **SlopScan**.
+
+Canonical GitHub repository:
+
+```text
+https://github.com/motionetcs/SlopScan
+```
+
+GitHub Pages deployment:
+
+```text
+https://motionetcs.github.io/SlopScan/
+```
+
 ## Core Flow
 
 1. Paste a product URL.
@@ -39,6 +55,12 @@ Open this route after starting the app:
 http://localhost:5174/ppt-video-storyboard.html
 ```
 
+Live storyboard route:
+
+```text
+https://motionetcs.github.io/SlopScan/ppt-video-storyboard.html
+```
+
 The source files are also in `docs/`.
 
 ## Local Development
@@ -58,7 +80,7 @@ npm run analyze:demo
 
 ## Deployment
 
-This repo includes a GitHub Pages workflow at `.github/workflows/deploy.yml`.
+This repo includes a GitHub Pages workflow at `.github/workflows/deploy.yml` and a Vercel config at `vercel.json`.
 
 On every push to `main`, GitHub Actions:
 
@@ -66,6 +88,13 @@ On every push to `main`, GitHub Actions:
 2. Runs TypeScript checks.
 3. Builds the Vite app.
 4. Deploys `dist/` to GitHub Pages.
+
+Vercel uses the same production build:
+
+```text
+npm run build
+dist/
+```
 
 ## Note
 
