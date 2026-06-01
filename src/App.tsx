@@ -21,9 +21,11 @@ import { AnalysisDashboard } from "./components/AnalysisDashboard";
 import { Pill } from "./components/Badges";
 import { ProductCard } from "./components/ProductCard";
 import { ProductVisual } from "./components/ProductVisual";
+import { MarketplaceLogo } from "./components/MarketplaceLogo";
 import { demoProducts, winningDemoProduct } from "./data/products";
 import { analyzeProduct } from "./lib/analysis";
 import { createManualProduct } from "./lib/manualImport";
+import { searchProductsCatalog, suggestedSearches } from "./lib/search";
 import type { ManualImportInput, Platform, ProductDemo } from "./types";
 
 type EntryMode = "search" | "link" | "manual";
@@ -110,26 +112,11 @@ function productFromUrl(value: string, platform: Platform): ProductDemo {
   };
 }
 
-function searchProducts(query: string, platforms: Platform[]) {
-  const normalized = query.trim().toLowerCase();
-  const allowed = new Set(platforms);
-  return demoProducts.filter((product) => {
-    const platformMatch = allowed.has(product.platform);
-    if (!platformMatch) return false;
-    if (!normalized) return true;
-    const haystack = `${product.title} ${product.category} ${product.tags.join(" ")} ${product.platform}`.toLowerCase();
-    return normalized
-      .split(/\s+/)
-      .filter(Boolean)
-      .some((term) => haystack.includes(term));
-  });
-}
-
 function App() {
   const [entryMode, setEntryMode] = useState<EntryMode>("search");
   const [query, setQuery] = useState("wireless earbuds");
   const [platforms, setPlatforms] = useState<Platform[]>(["Amazon", "Flipkart"]);
-  const [hasSearched, setHasSearched] = useState(false);
+  const [hasSearched, setHasSearched] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<ProductDemo | null>(null);
   const [urlValue, setUrlValue] = useState("");
   const [urlError, setUrlError] = useState("");
@@ -142,7 +129,7 @@ function App() {
   });
 
   const analysis = useMemo(() => (selectedProduct ? analyzeProduct(selectedProduct) : null), [selectedProduct]);
-  const results = useMemo(() => searchProducts(query, platforms), [query, platforms]);
+  const results = useMemo(() => searchProductsCatalog(demoProducts, query, platforms), [query, platforms]);
   const previewAnalysis = useMemo(() => analyzeProduct(winningDemoProduct), []);
 
   useEffect(() => {
@@ -163,6 +150,15 @@ function App() {
     event?.preventDefault();
     setEntryMode("search");
     setHasSearched(true);
+    setSelectedProduct(null);
+    window.setTimeout(() => document.getElementById("results")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+  }
+
+  function quickSearch(nextQuery: string) {
+    setQuery(nextQuery);
+    setEntryMode("search");
+    setHasSearched(true);
+    setSelectedProduct(null);
     window.setTimeout(() => document.getElementById("results")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
   }
 
@@ -222,13 +218,13 @@ function App() {
       <main>
         <section className="relative">
           <div className="absolute inset-0 grid-mask opacity-45" aria-hidden="true" />
-          <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 md:py-20 lg:grid-cols-[1.04fr_0.96fr] lg:px-8 lg:py-24">
+          <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 md:py-20 lg:grid-cols-[0.95fr_1.05fr] lg:px-8 lg:py-24">
             <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55 }}>
               <div className="mb-5 flex flex-wrap gap-2">
-                <Pill className="border-ghost-mint/25 bg-ghost-mint/10 text-ghost-mint">Hackathon-ready</Pill>
-                <Pill className="border-white/10 bg-white/5 text-white/64">Demo-safe analysis engine</Pill>
+                <Pill className="border-ghost-mint/25 bg-ghost-mint/10 text-ghost-mint">Marketplace trust layer</Pill>
+                <Pill className="border-white/10 bg-white/5 text-white/64">Amazon + Flipkart-style scan</Pill>
               </div>
-              <h1 className="max-w-3xl text-5xl font-semibold leading-[1.02] text-white md:text-6xl">
+              <h1 className="font-display max-w-3xl text-5xl font-semibold leading-[1.02] text-white md:text-6xl">
                 See what the star rating hides.
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-white/68">
@@ -256,13 +252,25 @@ function App() {
                   Try Demo Scan
                 </button>
               </div>
+              <div className="mt-7 grid max-w-xl grid-cols-3 gap-3">
+                {[
+                  ["5", "demo categories"],
+                  ["48+", "review signals"],
+                  ["0", "scraping risk"],
+                ].map(([value, label]) => (
+                  <div key={label} className="rounded-lg border border-white/10 bg-white/[0.045] p-3">
+                    <p className="font-display text-2xl font-semibold text-white">{value}</p>
+                    <p className="mt-1 text-xs text-white/45">{label}</p>
+                  </div>
+                ))}
+              </div>
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.08 }}
-              className="glass rounded-lg p-4 sm:p-5"
+              className="premium-panel rounded-lg p-4 sm:p-5"
             >
               <div className="mb-4 grid grid-cols-3 gap-2">
                 {[
@@ -278,7 +286,7 @@ function App() {
                       type="button"
                       onClick={() => setEntryMode(mode.id as EntryMode)}
                       className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-lg text-sm font-medium transition ${
-                        active ? "bg-white text-ink" : "border border-white/10 bg-white/5 text-white/60 hover:text-white"
+                      active ? "bg-white text-ink shadow-soft" : "border border-white/10 bg-white/5 text-white/60 hover:text-white"
                       }`}
                     >
                       <Icon className="h-4 w-4" aria-hidden="true" />
@@ -291,31 +299,43 @@ function App() {
               {entryMode === "search" ? (
                 <form onSubmit={handleSearch} className="grid gap-4">
                   <label className="grid gap-2">
-                    <span className="text-sm font-medium text-white/74">Product search</span>
+                    <span className="text-sm font-medium text-white/74">Marketplace product search</span>
                     <div className="flex min-h-14 items-center gap-3 rounded-lg border border-white/10 bg-black/20 px-4 focus-within:border-ghost-mint/55">
                       <Search className="h-5 w-5 text-white/36" aria-hidden="true" />
                       <input
                         value={query}
                         onChange={(event) => setQuery(event.target.value)}
-                        placeholder="wireless earbuds, USB-C charger, backpack"
+                        placeholder="earbuds, charger, smartwatch, backpack, serum"
                         className="w-full bg-transparent py-3 text-base text-white outline-none placeholder:text-white/30"
                       />
                     </div>
                   </label>
+                  <div className="flex flex-wrap gap-2">
+                    {suggestedSearches.map((item) => (
+                      <button
+                        key={item}
+                        type="button"
+                        onClick={() => quickSearch(item)}
+                        className="rounded-full border border-white/10 bg-white/[0.045] px-3 py-1.5 text-xs font-medium text-white/60 transition hover:border-ghost-cyan/35 hover:bg-ghost-cyan/10 hover:text-white"
+                      >
+                        {item}
+                      </button>
+                    ))}
+                  </div>
                   <div className="flex flex-wrap gap-2">
                     {(["Amazon", "Flipkart"] as Platform[]).map((platform) => (
                       <button
                         key={platform}
                         type="button"
                         onClick={() => togglePlatform(platform)}
-                        className={`inline-flex min-h-10 items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition ${
+                        className={`inline-flex min-h-10 items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition ${
                           platforms.includes(platform)
                             ? "border-ghost-mint/35 bg-ghost-mint/12 text-ghost-mint"
                             : "border-white/10 bg-white/5 text-white/55 hover:text-white"
                         }`}
                       >
                         {platforms.includes(platform) ? <Check className="h-4 w-4" aria-hidden="true" /> : null}
-                        {platform}
+                        <MarketplaceLogo platform={platform} compact />
                       </button>
                     ))}
                   </div>
@@ -323,7 +343,7 @@ function App() {
                     type="submit"
                     className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-ghost-mint px-5 py-3 text-sm font-semibold text-ink transition hover:bg-white"
                   >
-                    Scan product
+                    Show matched products
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </button>
                 </form>
@@ -428,7 +448,12 @@ function App() {
           <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
             <div>
               <p className="text-sm uppercase tracking-[0.2em] text-ghost-mint">Marketplace scan</p>
-              <h2 className="mt-2 text-3xl font-semibold text-white">Demo product results</h2>
+              <h2 className="font-display mt-2 text-3xl font-semibold text-white">
+                {hasSearched ? `Matched products for "${query || "all products"}"` : "Curated product scans"}
+              </h2>
+              <p className="mt-2 text-sm text-white/50">
+                Smart fuzzy search catches typos like "easrbnuds" and still finds the earbuds scan.
+              </p>
             </div>
             <button
               type="button"
@@ -445,7 +470,7 @@ function App() {
             </div>
           ) : null}
           <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {(hasSearched ? (results.length ? results : demoProducts.slice(0, 3)) : demoProducts.slice(0, 3)).map((product) => (
+            {(hasSearched ? (results.length ? results : demoProducts) : demoProducts).map((product) => (
               <ProductCard key={product.id} product={product} onAnalyze={setSelectedProduct} />
             ))}
           </div>

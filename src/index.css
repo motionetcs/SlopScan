@@ -29,6 +29,13 @@ body {
   color: #f8fafc;
 }
 
+h1,
+h2,
+h3,
+.font-display {
+  font-family: Sora, Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
 button,
 input,
 textarea,
@@ -46,9 +53,20 @@ button {
 
 .glass {
   border: 1px solid rgba(255, 255, 255, 0.11);
-  background: linear-gradient(145deg, rgba(17, 22, 33, 0.9), rgba(10, 14, 21, 0.78));
-  box-shadow: 0 18px 70px rgba(0, 0, 0, 0.28);
+  background:
+    linear-gradient(145deg, rgba(19, 24, 36, 0.92), rgba(8, 12, 19, 0.82)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent);
+  box-shadow: 0 22px 80px rgba(0, 0, 0, 0.36);
   backdrop-filter: blur(22px);
+}
+
+.premium-panel {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.028)),
+    linear-gradient(180deg, rgba(119, 217, 255, 0.06), transparent 40%);
+  box-shadow: 0 28px 110px rgba(0, 0, 0, 0.34);
+  backdrop-filter: blur(24px);
 }
 
 .grid-mask {
