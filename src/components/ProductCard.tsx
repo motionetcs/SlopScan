@@ -1,10 +1,10 @@
 import { ArrowRight, MessageSquareText, ScanLine, Star, TrendingUp } from "lucide-react";
-import { motion } from "framer-motion";
 import type { ProductAnalysis, ProductDemo } from "../types";
 import { analyzeProduct } from "../lib/analysis";
 import { ScoreRing } from "./ScoreRing";
 import { VerdictPill } from "./Badges";
 import { MarketplaceLogo } from "./MarketplaceLogo";
+import { ProductVisual } from "./ProductVisual";
 
 export function ProductCard({
   product,
@@ -23,13 +23,9 @@ export function ProductCard({
   const topIssue = analysis.issueMap[0];
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 14 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.4 }}
-      className="premium-panel grid min-h-[24rem] gap-5 rounded-lg p-4 transition duration-300 hover:-translate-y-1 hover:border-ghost-cyan/28 hover:shadow-glow"
-    >
+    <article className="premium-panel flex h-full flex-col gap-4 rounded-lg p-4 transition duration-300 hover:-translate-y-1 hover:border-ghost-cyan/28 hover:shadow-glow">
+      <ProductVisual product={product} compact />
+
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
           <MarketplaceLogo platform={product.platform} compact />
@@ -43,9 +39,9 @@ export function ProductCard({
         </span>
       </div>
 
-      <div>
+      <div className="grid gap-3">
         <h3 className="font-display text-lg font-semibold leading-snug text-white">{product.title}</h3>
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2">
           <span className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs font-semibold text-white">
             {product.category}
           </span>
@@ -76,7 +72,7 @@ export function ProductCard({
         </div>
       </div>
 
-      <div className="grid gap-3 border-t border-white/10 pt-4">
+      <div className="mt-auto grid gap-3 border-t border-white/10 pt-4">
         <div className="flex flex-wrap items-center gap-2">
           <VerdictPill verdict={analysis.finalVerdict} />
           <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 text-xs text-emerald-100">
@@ -98,6 +94,6 @@ export function ProductCard({
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </button>
       </div>
-    </motion.article>
+    </article>
   );
 }

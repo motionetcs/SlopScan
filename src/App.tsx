@@ -858,54 +858,59 @@ function App() {
           </div>
         </section>
 
-        <section id="methodology" className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-          <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
-            <div>
-              <p className="text-sm uppercase tracking-[0.2em] text-ghost-mint">Methodology</p>
-              <h2 className="mt-3 text-3xl font-semibold text-white">Explainable signals, not black-box accusations.</h2>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              {[
-                ["Experience grounding", "Rewards time used, device details, defect context, setup notes, measurements, and before/after evidence."],
-                ["Similarity clusters", "Uses normalized tokens, repeated n-grams, and Jaccard overlap to flag copy-pattern review noise."],
-                ["Product mismatch", "Checks whether review text mentions an unrelated product category, creating a ghost-review risk signal."],
-                ["Claim support", "Compares seller claims with grounded buyer evidence and Q&A quality signals."],
-              ].map(([title, copy]) => (
-                <article key={title} className="rounded-lg border border-white/10 bg-white/[0.045] p-4">
-                  <h3 className="font-semibold text-white">{title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-white/62">{copy}</p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="privacy" className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-          <div className="glass grid gap-6 rounded-lg p-5 md:grid-cols-[0.72fr_1.28fr] md:p-8">
-            <div>
-              <p className="text-sm uppercase tracking-[0.2em] text-ghost-cyan">Privacy</p>
-              <h2 className="mt-3 text-3xl font-semibold text-white">Privacy-conscious by design.</h2>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              {[
-                ["Local pattern analysis", "Review text is analyzed for pattern detection in the app flow. Basic use does not require an account."],
-                ["No restricted scraping", "Marketplace URLs are validated and categorized, but SlopScan does not pretend to fetch reviews where reliable access is unavailable."],
-                ["Paste carefully", "Do not paste private information, order IDs, phone numbers, addresses, or personal data into review text."],
-                ["No exposed secrets", "The app uses deterministic local logic and no required paid API keys for the core analysis."],
-              ].map(([title, copy]) => (
-                <article key={title} className="rounded-lg border border-white/10 bg-white/[0.045] p-4">
-                  <div className="flex items-center gap-2">
-                    <Lock className="h-4 w-4 text-ghost-mint" aria-hidden="true" />
+        <section id="methodology" className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+          <div className="glass rounded-lg p-5 md:p-8">
+            <div className="grid gap-6 lg:grid-cols-[0.78fr_1.22fr]">
+              <div>
+                <p className="text-sm uppercase tracking-[0.2em] text-ghost-mint">Methodology</p>
+                <h2 className="mt-3 text-3xl font-semibold text-white">Explainable signals, not black-box accusations.</h2>
+                <p className="mt-4 text-sm leading-6 text-white/58">
+                  Every score is backed by visible evidence: grounded detail, repeated language, product mismatch, claim support, and review usefulness.
+                </p>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                {[
+                  ["Experience grounding", "Rewards time used, device details, defect context, setup notes, measurements, and before/after evidence."],
+                  ["Similarity clusters", "Uses normalized tokens, repeated n-grams, and Jaccard overlap to flag copy-pattern review noise."],
+                  ["Product mismatch", "Checks whether review text mentions an unrelated product category, creating a ghost-review risk signal."],
+                  ["Claim support", "Compares seller claims with grounded buyer evidence and Q&A quality signals."],
+                ].map(([title, copy]) => (
+                  <article key={title} className="rounded-lg border border-white/10 bg-white/[0.045] p-4">
                     <h3 className="font-semibold text-white">{title}</h3>
-                  </div>
-                  <p className="mt-2 text-sm leading-6 text-white/62">{copy}</p>
-                </article>
-              ))}
+                    <p className="mt-2 text-sm leading-6 text-white/62">{copy}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div id="privacy" className="mt-7 border-t border-white/10 pt-7">
+              <div className="grid gap-6 lg:grid-cols-[0.78fr_1.22fr]">
+                <div>
+                  <p className="text-sm uppercase tracking-[0.2em] text-ghost-cyan">Privacy</p>
+                  <h2 className="mt-3 text-3xl font-semibold text-white">Privacy-conscious by design.</h2>
+                </div>
+                <div className="grid gap-4 md:grid-cols-2">
+                  {[
+                    ["Local pattern analysis", "Review text is analyzed for pattern detection in the app flow. Basic use does not require an account."],
+                    ["No restricted scraping", "Marketplace URLs are validated and categorized, but SlopScan does not pretend to fetch reviews where reliable access is unavailable."],
+                    ["Paste carefully", "Do not paste private information, order IDs, phone numbers, addresses, or personal data into review text."],
+                    ["No exposed secrets", "The app uses deterministic local logic and no required paid API keys for the core analysis."],
+                  ].map(([title, copy]) => (
+                    <article key={title} className="rounded-lg border border-white/10 bg-white/[0.045] p-4">
+                      <div className="flex items-center gap-2">
+                        <Lock className="h-4 w-4 shrink-0 text-ghost-mint" aria-hidden="true" />
+                        <h3 className="font-semibold text-white">{title}</h3>
+                      </div>
+                      <p className="mt-2 text-sm leading-6 text-white/62">{copy}</p>
+                    </article>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        <section id="faq" className="mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8">
+        <section id="faq" className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
           <div className="mb-8 text-center">
             <p className="text-sm uppercase tracking-[0.2em] text-ghost-cyan">FAQ</p>
             <h2 className="mt-3 text-3xl font-semibold text-white">Honest trust analysis for real shopping decisions.</h2>

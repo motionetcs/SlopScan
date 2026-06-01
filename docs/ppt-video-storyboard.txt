@@ -4,7 +4,7 @@ Use this for a hackathon pitch deck or 3-4 minute demo video.
 
 Recommended slide style:
 - Use picture on the left and short text on the right.
-- Use screenshots from https://motionetcs.github.io/SlopScan/
+- Use screenshots from https://slopscan-tau.vercel.app/ or https://motionetcs.github.io/SlopScan/
 - Keep each slide to 3-5 bullets.
 - Use the speaker notes as your video voiceover.
 

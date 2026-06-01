@@ -8,9 +8,10 @@ Recommended slide style:
 - Use large headings and minimal paragraphs.
 - For the video, show the live app for the flow slides and use the voiceover notes below.
 
-Preview URL for screenshots:
+Preview URLs for screenshots:
 
 ```text
+https://slopscan-tau.vercel.app/
 https://motionetcs.github.io/SlopScan/
 ```
 

@@ -1,6 +1,16 @@
 # SlopScan
 
-SlopScan is a review trust analyzer for online shopping. It helps shoppers inspect the quality of product reviews before trusting a rating.
+SlopScan is a privacy-conscious review trust analyzer for online shopping. Shoppers paste a product URL, paste or import reviews, and get an explainable dashboard that shows the review patterns behind the rating.
+
+## Separate Product Description
+
+SlopScan helps online shoppers decide whether product reviews are useful, repetitive, promotional, mismatched, or grounded in real buyer experience. It does not claim to prove that a review is fake. Instead, it turns pasted marketplace reviews into a clear trust report with review-risk scoring, repeated phrase clusters, buyer issue extraction, seller-claim support checks, and a copyable summary for quick decisions.
+
+Short pitch:
+
+```text
+SlopScan is a review trust layer for online shopping. Paste a product URL, paste or import reviews, and get an explainable dashboard that reveals suspicious patterns, real buyer issues, and claim-support gaps before you buy.
+```
 
 ## Real Product Name
 
@@ -40,7 +50,7 @@ https://slopscan-tau.vercel.app/
 - Real buyer issue clusters
 - Q&A answers that do not actually answer buyer questions
 
-## Demo Features
+## Product Features
 
 - URL detection for Amazon, Flipkart, Meesho, Myntra, Walmart, Best Buy, and other stores
 - Manual review paste/import flow
@@ -61,9 +71,10 @@ Open this route after starting the app:
 http://localhost:5174/ppt-video-storyboard.html
 ```
 
-Live storyboard route:
+Live storyboard routes:
 
 ```text
+https://slopscan-tau.vercel.app/ppt-video-storyboard.html
 https://motionetcs.github.io/SlopScan/ppt-video-storyboard.html
 ```
 
